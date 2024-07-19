@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "django-rest-framework"
+version = "0.1.0"
+description = "Working with 'Order' and 'Produc'"
+authors = ["Ezequias Silva Santos <phd.esantos@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0"
+djangorestframework = "^3.15"
+
+
+[tool.poetry.group.dev.dependencies]
+factory-boy = "^3.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
