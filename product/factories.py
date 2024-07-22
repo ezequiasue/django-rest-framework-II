@@ -2,47 +2,27 @@ import factory
 from product.models.category import Category
 from product.models.product import Product
 
-
-
 class CategoryFactory(factory.django.DjangoModelFactory):
-    # Faker para gerpyar uma palavra realista para o nome
-    name = factory.Faker("word")
-    # Faker para gerar um slug realista (string amigável para URLs)
-    slug = factory.Faker("slug")
-    # Faker para gerar uma descrição realista
-    description = factory.Faker("text")
-    # Iterator para alternar entre True e False
-    active = factory.Iterator([True, False])
+    name = factory.Faker("word")  # Generate a realistic name
+    slug = factory.Faker("slug")  # Generate a realistic slug
+    description = factory.Faker("text")  # Generate a realistic description
+    active = factory.Iterator([True, False])  # Alternate between True and False
 
     class Meta:
         model = Category
 
-
 class ProductFactory(factory.django.DjangoModelFactory):
-    # Faker para gerar um valor inteiro para o preço
-    price = factory.Faker("pyint")
-    # SubFactory para criar automaticamente uma instância de Category
-    category = factory.SubFactory(CategoryFactory)
-    # Faker para gerar uma palavra realista para o nome do produto
-    name = factory.Faker("word")
+    price = factory.Faker("pyint")  # Generate an integer price
+    category = factory.SubFactory(CategoryFactory)  # Automatically create a Category instance
+    name = factory.Faker("word")  # Generate a realistic product name
 
     @factory.post_generation
     def category(self, create, extracted, **kwargs):
-        """
-        Método post_generation é usado para adicionar múltiplas categorias ao produto
-        após a criação inicial.
-
-        Args:
-            create (bool): Flag que indica se a instância foi criada.
-            extracted (list): Lista de categorias extraídas para adicionar ao produto.
-        """
         if not create:
-            # Se a instância não foi criada (apenas construída), não faz nada.
             return
         if extracted:
-            # Se categorias foram fornecidas, adiciona cada uma delas ao produto.
             for category in extracted:
-                self.category.add(category)
+                self.category.add(category)  # Add categories to the product
 
     class Meta:
         model = Product
