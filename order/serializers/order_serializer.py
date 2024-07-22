@@ -1,33 +1,26 @@
 from rest_framework import serializers
-
-from product.models import Product
-from product.serializers.product_serializer import ProductSerializer
-
+from order.models.order import Order
+from order.models.order_item import OrderItem
+from order.serializers.order_item_serializer import OrderItemSerializer
 
 class OrderSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(required=True, many=True)
+    items = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()
-    
-    
-    def get_total(self, instance):
-        total = sum([Product.price for product in instance.product.all()])
-        return total
-    
-    
+
     class Meta:
-        model = Product
-        fields = ['product', 'total']
+        model = Order
+        fields = (
+            "user",
+            "status",
+            "items",
+            "total",
+        )
 
-# class OrderItemSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = OrderItem
-#         fields = ('id', 'product', 'quantity', 'price')
+    def get_items(self, instance):
+        order_items = OrderItem.objects.filter(order=instance)
+        return OrderItemSerializer(order_items, many=True).data
 
-# class OrderSerializer(serializers.ModelSerializer):
-#     items = OrderItemSerializer(many=True, read_only=True)  # Nested serializer for OrderItem
-
-#     class Meta:
-#         model = Order
-#         fields = ('id', 'user', 'status', 'created_at', 'updated_at', 'items')
-
-
+    def get_total(self, instance):
+        order_items = OrderItem.objects.filter(order=instance)
+        total = sum(item.price * item.quantity for item in order_items)
+        return total
