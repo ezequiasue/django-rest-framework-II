@@ -2,9 +2,10 @@ import pytest
 from django.contrib.auth.models import User
 from order.models.order import Order
 from order.models.order_item import OrderItem
-from product.models.product import Product
-from product.models.category import Category
-from order.serializers import OrderSerializer, OrderItemSerializer
+from product.models import Product, Category
+from order.serializers.order_serializer import OrderSerializer
+from order.serializers.order_item_serializer import OrderItemSerializer
+from decimal import Decimal
 
 @pytest.mark.django_db
 def test_order_serializer_valid():
@@ -18,11 +19,11 @@ def test_order_serializer_valid():
     product = Product.objects.create(
         name='Smartphone',
         description='A high-end smartphone.',
-        price=999.99,  # Price as a float for simplicity in this test
+        price=Decimal('999.99'),
         stock=10,
-        active=True
+        active=True,
+        category=category  # Directly set the category
     )
-    product.category.set([category])
     
     # Create a test order for the user
     order = Order.objects.create(user=user, status='pending')
@@ -33,14 +34,16 @@ def test_order_serializer_valid():
     # Serialize the order
     serializer = OrderSerializer(instance=order)
     data = serializer.data
+    print(data)  # Add this line for debugging
     
     # Verify the serialized data structure
+    assert isinstance(data['items'], list)  # Ensure items is a list
     assert len(data['items']) == 1  # Ensure there is one item
     assert data['items'][0]['product']['name'] == 'Smartphone'  # Check product name
     assert data['items'][0]['product']['description'] == 'A high-end smartphone.'  # Check product description
-    assert data['items'][0]['product']['price'] == '999.99'  # Check product price
+    assert str(data['items'][0]['product']['price']) == '999.99'  # Check product price as string
     assert data['items'][0]['product']['active'] == True  # Check product active status
-    assert data['items'][0]['product']['category'][0]['name'] == 'Electronics'  # Check category name
+    assert data['items'][0]['product']['category']['name'] == 'Electronics'  # Check category name
     assert data['items'][0]['quantity'] == 2  # Verify item quantity
     assert str(data['total']) == '1999.98'  # Ensure the total is correct as a string
 
@@ -56,11 +59,11 @@ def test_order_item_serializer_valid():
     product = Product.objects.create(
         name='Smartphone',
         description='A high-end smartphone.',
-        price=999.99,  # Price as a float for simplicity in this test
+        price=Decimal('999.99'),
         stock=10,
-        active=True
+        active=True,
+        category=category  # Directly set the category
     )
-    product.category.set([category])
     
     # Create a test order for the user
     order = Order.objects.create(user=user, status='pending')
@@ -71,13 +74,14 @@ def test_order_item_serializer_valid():
     # Serialize the order item
     serializer = OrderItemSerializer(instance=order_item)
     data = serializer.data
+    print(f'{data}')  # Add this line for debugging
     
     # Verify the serialized data structure
-    assert data['order_id'] == order.id  # Check the order ID
+    assert data['order'] == order.id  # Check the order ID
     assert data['product']['id'] == product.id  # Check the product ID
     assert data['product']['name'] == 'Smartphone'  # Check product name
     assert data['product']['description'] == 'A high-end smartphone.'  # Check product description
-    assert data['product']['price'] == '999.99'  # Check product price
+    assert str(data['product']['price']) == '999.99'  # Check product price as string
     assert data['product']['active'] == True  # Check product active status
     assert data['quantity'] == 2  # Verify item quantity
     assert str(data['price']) == '999.99'  # Ensure the price is correct as a string
