@@ -1,3 +1,5 @@
+# core/urls.py
+
 """
 URL configuration for core project.
 
@@ -15,11 +17,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+
 from django.contrib import admin
 from django.urls import path, include
-
+from core import views  # Importe a view home
+import debug_toolbar
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    #path('', include('order.urls')),
+    path("__debug__/", include(debug_toolbar.urls)),
+    path('admin/', admin.site.urls),
+    path('', views.home, name='home'),  # Adicione esta linha
+    path('api/orders/', include('order.urls')),
+    path('api/products/', include('product.urls')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
