@@ -1,5 +1,3 @@
-# core/urls.py
-
 """
 URL configuration for core project.
 
@@ -17,19 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-
 from django.contrib import admin
 from django.urls import path, include
-from core import views  # Importe a view home
+from core import views  # Import the home view from core app
 import debug_toolbar
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    path("__debug__/", include(debug_toolbar.urls)),
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),  # Adicione esta linha
-    path('api/orders/', include('order.urls')),
-    path('api/products/', include('product.urls')),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path("__debug__/", include(debug_toolbar.urls)),  # Debug Toolbar URLs (development only)
+    path('admin/', admin.site.urls),  # Admin interface
+    path('', views.home, name='home'),  # Root URL mapped to the home view
+    path('api/orders/', include('order.urls')),  # Orders API
+    path('api/products/', include('product.urls')),  # Products API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema endpoint
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),  # Swagger UI documentation
 ]

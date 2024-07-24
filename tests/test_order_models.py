@@ -6,6 +6,9 @@ from decimal import Decimal
 
 @pytest.mark.django_db
 def test_create_order():
+    """
+    Test that an Order can be created with associated OrderItems.
+    """
     # Create a test user
     user = User.objects.create_user(
         username="testuser", email="test@example.com", password="password"
@@ -21,7 +24,7 @@ def test_create_order():
         price=Decimal("999.99"),
         stock=10,
         active=True,
-        category=category  # Associate the product with the category
+        category=category
     )
 
     # Create a test order for the user
@@ -46,6 +49,9 @@ def test_create_order():
 
 @pytest.mark.django_db
 def test_order_item_creation():
+    """
+    Test that an OrderItem can be created with the correct attributes.
+    """
     # Create a test user
     user = User.objects.create_user(
         username="testuser", email="test@example.com", password="password"
@@ -61,7 +67,7 @@ def test_order_item_creation():
         price=Decimal("999.99"),
         stock=10,
         active=True,
-        category=category  # Associate the product with the category
+        category=category
     )
 
     # Create a test order for the user

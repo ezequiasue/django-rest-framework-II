@@ -2,13 +2,13 @@ import os
 import sys
 import django
 
-# Adicione o caminho do projeto ao PYTHONPATH
+# Add the project path to PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Defina a variável de ambiente DJANGO_SETTINGS_MODULE
+# Set the DJANGO_SETTINGS_MODULE environment variable
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-# Inicialize o Django
+# Initialize Django
 django.setup()
 
 import factory
@@ -16,31 +16,37 @@ from product.models.category import Category
 from product.models.product import Product
 
 class CategoryFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker("word")  # Gera um nome realista
-    slug = factory.Faker("slug")  # Gera um slug realista
-    description = factory.Faker("text")  # Gera uma descrição realista
-    active = factory.Iterator([True, False])  # Alterna entre True e False
+    """
+    Factory to create instances of Category.
+    """
+    name = factory.Faker("word")  # Generates a realistic category name
+    slug = factory.Faker("slug")  # Generates a realistic slug
+    description = factory.Faker("text")  # Generates a realistic description
+    active = factory.Iterator([True, False])  # Alternates between True and False
 
     class Meta:
         model = Category
 
 class ProductFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker("word")  # Gera um nome de produto realista
-    description = factory.Faker("text")  # Gera uma descrição de produto realista
-    price = factory.Faker("pydecimal", left_digits=4, right_digits=2, positive=True)  # Gera um preço realista
-    stock = factory.Faker("pyint")  # Gera uma quantidade em estoque realista
-    active = factory.Iterator([True, False])  # Alterna entre True e False
-    category = factory.SubFactory(CategoryFactory)  # Cria automaticamente uma instância de Categoria
+    """
+    Factory to create instances of Product.
+    """
+    name = factory.Faker("word")  # Generates a realistic product name
+    description = factory.Faker("text")  # Generates a realistic product description
+    price = factory.Faker("pydecimal", left_digits=4, right_digits=2, positive=True)  # Generates a realistic price
+    stock = factory.Faker("pyint")  # Generates a realistic stock quantity
+    active = factory.Iterator([True, False])  # Alternates between True and False
+    category = factory.SubFactory(CategoryFactory)  # Automatically creates a related Category instance
 
     class Meta:
         model = Product
 
 if __name__ == "__main__":
-    # Cria 5 categorias e 10 produtos
+    # Create 5 categories and 10 products
     for _ in range(5):
         CategoryFactory()
 
     for _ in range(10):
         ProductFactory()
 
-    print("Categorias e produtos criados com sucesso!")
+    print("Categories and products created successfully!")

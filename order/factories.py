@@ -2,13 +2,13 @@ import os
 import sys
 import django
 
-# Adicione o caminho do projeto ao PYTHONPATH
+# Add the project's directory to the PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Defina a variável de ambiente DJANGO_SETTINGS_MODULE
+# Set the DJANGO_SETTINGS_MODULE environment variable
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-# Inicialize o Django
+# Initialize Django
 django.setup()
 
 import factory
@@ -19,7 +19,7 @@ from order.models import OrderItem
 
 class UserFactory(factory.django.DjangoModelFactory):
     """
-    Fábrica para criar instâncias de User.
+    Factory to create instances of User.
     """
     email = factory.Faker("email")
     username = factory.Faker("user_name")
@@ -30,14 +30,14 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 class OrderFactory(factory.django.DjangoModelFactory):
     """
-    Fábrica para criar instâncias de Order.
+    Factory to create instances of Order.
     """
-    user = factory.SubFactory(UserFactory)  # Cria um usuário associado
+    user = factory.SubFactory(UserFactory)  # Creates an associated user
 
     @factory.post_generation
     def items(self, create, extracted, **kwargs):
         """
-        Adiciona OrderItems a uma ordem após a criação.
+        Adds OrderItems to an order after it is created.
         """
         if not create:
             return
@@ -49,15 +49,14 @@ class OrderFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Order
 
-# Execução do script para criar uma ordem com itens
+# Execute the script to create an order with items
 if __name__ == "__main__":
     from product.factories import ProductFactory
 
-    # Cria alguns produtos
-    products = ProductFactory.create_batch(3)  # Cria 3 produtos
+    # Create some products
+    products = ProductFactory.create_batch(3)  # Creates 3 products
 
-    # Cria uma ordem e associa esses produtos com quantidades e preços
-    items = [(product, 2, 19.99) for product in products]  # Exemplo: 2 unidades de cada produto, preço 19.99
+    # Create an order and associate these products with quantities and prices
+    items = [(product, 2, 19.99) for product in products]  # Example: 2 units of each product, price 19.99
     order = OrderFactory(items=items)
     print(order)
-
