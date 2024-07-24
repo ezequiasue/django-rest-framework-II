@@ -7,61 +7,80 @@ from product.serializers.product_serializer import ProductSerializer
 
 @pytest.mark.django_db
 def test_category_serializer_valid_data():
-    # Cria uma categoria de teste
-    category = Category.objects.create(name="Electronics", slug="electronics", description="Devices and gadgets")
+    """
+    Test that CategorySerializer correctly serializes valid Category data.
+    """
+    # Create a test category
+    category = Category.objects.create(
+        name="Electronics",
+        slug="electronics",
+        description="Devices and gadgets"
+    )
     
-    # Serializa a instância da categoria
+    # Serialize the category instance
     serializer = CategorySerializer(category)
     data = serializer.data
     
-    # Valida os dados serializados
-    assert data['name'] == "Electronics"  # Verifica o nome da categoria
-    assert data['slug'] == "electronics"  # Verifica o slug da categoria
-    assert data['description'] == "Devices and gadgets"  # Verifica a descrição da categoria
-    assert data['active'] is True  # Verifica se a categoria está ativa
+    # Validate serialized data
+    assert data['name'] == "Electronics"  # Verify the name of the category
+    assert data['slug'] == "electronics"  # Verify the slug of the category
+    assert data['description'] == "Devices and gadgets"  # Verify the description of the category
+    assert data['active'] is True  # Ensure the category is active
 
 @pytest.mark.django_db
 def test_product_serializer_valid_data():
-    # Cria uma categoria de teste
-    category = Category.objects.create(name="Electronics", slug="electronics", description="A category for electronics")
+    """
+    Test that ProductSerializer correctly serializes valid Product data.
+    """
+    # Create a test category
+    category = Category.objects.create(
+        name="Electronics",
+        slug="electronics",
+        description="A category for electronics"
+    )
     
-    # Cria um produto de teste e atribui a categoria
+    # Create a test product and assign the category
     product = Product.objects.create(
         name="Smartphone",
         description="A high-end smartphone.",
         price=999.99,
         stock=10,
         active=True,
-        category=category  # Atribui a categoria diretamente
+        category=category
     )
     
-    # Serializa a instância do produto
+    # Serialize the product instance
     serializer = ProductSerializer(product)
     data = serializer.data
     
-    # Valida os dados serializados
-    assert data['name'] == "Smartphone"  # Verifica o nome do produto
-    assert data['price'] == "999.99"  # Verifica o preço do produto (formato string)
-    assert data['category']['id'] == category.id  # Verifica o ID da categoria
-    assert data['category']['name'] == category.name  # Verifica o nome da categoria
-    assert data['category']['slug'] == category.slug  # Verifica o slug da categoria
-
+    # Validate serialized data
+    assert data['name'] == "Smartphone"  # Verify the name of the product
+    assert data['price'] == "999.99"  # Verify the price of the product (as a string)
+    assert data['category']['id'] == category.id  # Verify the ID of the category
+    assert data['category']['name'] == category.name  # Verify the name of the category
+    assert data['category']['slug'] == category.slug  # Verify the slug of the category
 
 @pytest.mark.django_db
 def test_category_serializer_invalid_data():
-    # Testa o serializer com dados inválidos
+    """
+    Test that CategorySerializer returns errors for invalid data.
+    """
+    # Test serializer with invalid data
     serializer = CategorySerializer(data={})
-    assert not serializer.is_valid()  # Garante que o serializer é inválido
-    assert 'name' in serializer.errors  # Verifica erro no campo 'name'
-    assert 'slug' in serializer.errors  # Verifica erro no campo 'slug'
+    assert not serializer.is_valid()  # Ensure the serializer is invalid
+    assert 'name' in serializer.errors  # Check for error on 'name' field
+    assert 'slug' in serializer.errors  # Check for error on 'slug' field
 
 @pytest.mark.django_db
 def test_product_serializer_invalid_data():
-    # Testa o serializer com dados inválidos
+    """
+    Test that ProductSerializer returns errors for invalid data.
+    """
+    # Test serializer with invalid data
     serializer = ProductSerializer(data={})
-    assert not serializer.is_valid()  # Garante que o serializer é inválido
-    assert 'name' in serializer.errors  # Verifica erro no campo 'name'
-    assert 'category' in serializer.errors  # Verifica erro no campo 'category'
-    assert 'description' in serializer.errors  # Verifica erro no campo 'description'
-    assert 'stock' in serializer.errors  # Verifica erro no campo 'stock'
-    # Não verificamos 'price' aqui porque é opcional
+    assert not serializer.is_valid()  # Ensure the serializer is invalid
+    assert 'name' in serializer.errors  # Check for error on 'name' field
+    assert 'category' in serializer.errors  # Check for error on 'category' field
+    assert 'description' in serializer.errors  # Check for error on 'description' field
+    assert 'stock' in serializer.errors  # Check for error on 'stock' field
+    # We don't check 'price' here because it's optional
