@@ -31,19 +31,30 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
+
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 3,
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',  # Adiciona suporte para drf-spectacular
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Use Token Authentication for API access
+        'rest_framework.authentication.BasicAuthentication',  # Use Basic Authentication for API access
+        'rest_framework.authentication.SessionAuthentication',  # Use Session Authentication for API access
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Require users to be authenticated for API access
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',  # Use PageNumberPagination for API responses
+    'PAGE_SIZE': 2,  # Number of items per page in paginated responses
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',  # Use drf-spectacular's AutoSchema for generating API schema
 }
 
+# drf-spectacular settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Sua API',
-    'DESCRIPTION': 'Descrição da sua API',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    # Adicione outras configurações conforme necessário
+    'TITLE': 'API',  # Title for the API schema
+    'DESCRIPTION': 'Project involving Product and Order apps',  # Description for the API schema
+    'VERSION': '1.0.0',  # Version of the API
+    'SERVE_INCLUDE_SCHEMA': False,  # Do not expose the schema in the Swagger interface (set to True to include it)
 }
+
+
 
 # Application definition
 
@@ -55,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "django_extensions",
     "product",
     "order",

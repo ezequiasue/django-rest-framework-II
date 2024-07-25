@@ -34,7 +34,6 @@ def test_order_serializer_valid():
     # Serialize the order
     serializer = OrderSerializer(instance=order)
     data = serializer.data
-    print(data)  # Add this line for debugging
     
     # Verify the serialized data structure
     assert isinstance(data['items'], list)  # Ensure items is a list
@@ -74,7 +73,6 @@ def test_order_item_serializer_valid():
     # Serialize the order item
     serializer = OrderItemSerializer(instance=order_item)
     data = serializer.data
-    print(f'{data}')  # Add this line for debugging
     
     # Verify the serialized data structure
     assert data['order'] == order.id  # Check the order ID

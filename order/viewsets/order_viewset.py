@@ -1,10 +1,15 @@
 from rest_framework.viewsets import ModelViewSet
 from order.models import Order
 from order.serializers import OrderSerializer
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 class OrderViewSet(ModelViewSet):
-    # Define the queryset that this viewset will operate on.
-    queryset = Order.objects.all()
-    
-    # Specify the serializer class to use for transforming the Order instances.
-    serializer_class = OrderSerializer
+    """
+    ViewSet for performing CRUD operations on Order objects.
+    """
+    queryset = Order.objects.all()  # Fetch all Order instances
+    serializer_class = OrderSerializer  # Serializer for Order objects
+
+    authentication_classes = [TokenAuthentication, BasicAuthentication, SessionAuthentication]  # Supported authentication methods
+    permission_classes = [IsAuthenticated, IsAdminUser]  # Access requires authentication and admin rights

@@ -15,18 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
-from core import views  # Import the home view from core app
-import debug_toolbar
+from core.views import ProtectedEndpointView, index
+from rest_framework.authtoken.views import obtain_auth_token
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),  # Debug Toolbar URLs (development only)
     path('admin/', admin.site.urls),  # Admin interface
-    path('', views.home, name='home'),  # Root URL mapped to the home view
+    path('', index, name='index'),  # Root URL mapped to the home view
     path('api/orders/', include('order.urls')),  # Orders API
     path('api/products/', include('product.urls')),  # Products API
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # OpenAPI schema endpoint
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),  # Swagger UI documentation
+    path('api/token/', obtain_auth_token, name='obtain-token'),  # URL for obtaining token
+    path('api/protected/', ProtectedEndpointView.as_view(), name='protected-endpoint'),  # URL for protected endpoint
 ]
