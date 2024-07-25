@@ -43,10 +43,10 @@ class ProductFactory(factory.django.DjangoModelFactory):
 
 if __name__ == "__main__":
     # Create 5 categories and 10 products
-    for _ in range(5):
+    for _ in range(2):
         CategoryFactory()
 
-    for _ in range(10):
+    for _ in range(2):
         ProductFactory()
 
     print("Categories and products created successfully!")
