@@ -23,8 +23,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-u))mh#bde!d@su
 #DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
+# Inclua '0.0.0.0' em ALLOWED_HOSTS
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,0.0.0.0').split(',')
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split(',')
+
 
 INTERNAL_IPS = [
     '127.0.0.1',

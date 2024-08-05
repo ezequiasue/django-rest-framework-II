@@ -50,3 +50,6 @@ if __name__ == "__main__":
         ProductFactory()
 
     print("Categories and products created successfully!")
+    
+    
+    print(__name__)
