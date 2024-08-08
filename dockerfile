@@ -1,43 +1,29 @@
-# Base image with Python
-FROM python:3.12-slim as builder-base
+# Use a imagem base do Python
+FROM python:3.12-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.8.0 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1
-
-# Prepend poetry to path
-ENV PATH="$POETRY_HOME/bin:$PATH"
-
-# Install system dependencies
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install --no-install-recommends -y \
     curl \
     build-essential \
+    libpq-dev \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
+# Instalar o Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:${PATH}"
 
-# Set working directory
+# Configurar o diretório de trabalho
 WORKDIR /app
 
-# Copy project dependency files
+# Copiar arquivos de dependências
 COPY poetry.lock pyproject.toml ./
 
-# Install project dependencies
+# Instalar dependências do projeto
 RUN poetry install --no-dev
 
-# Copy the entire project directory
+# Copiar o restante do código do projeto
 COPY . .
 
-# Expose port 8000
-EXPOSE 8000
-
-# Command to run the application
+# Comando padrão para iniciar o Django
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

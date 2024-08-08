@@ -17,7 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-u))mh#bde!d@suhf+mqix&&6vr+0^dfgt=e(m&(u-xz6+rvm3m')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
@@ -30,7 +30,7 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1,0.0.0.0').spli
 
 INTERNAL_IPS = [
     '127.0.0.1',
-    'localhost',
+    
 ]
 
 
@@ -114,14 +114,15 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.sqlite3'),
-        "NAME": os.environ.get('DJANGO_DB_NAME', BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get('DJANGO_DB_USER', ''),
-        "PASSWORD": os.environ.get('DJANGO_DB_PASSWORD', ''),
-        "HOST": os.environ.get('DJANGO_DB_HOST', ''),
-        "PORT": os.environ.get('DJANGO_DB_PORT', ''),
+        "ENGINE": os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.postgresql'),
+        "NAME": os.environ.get('DJANGO_DB_NAME', 'postgres'),
+        "USER": os.environ.get('DJANGO_DB_USER', 'postgres'),
+        "PASSWORD": os.environ.get('DJANGO_DB_PASSWORD', 'password'),
+        "HOST": os.environ.get('DJANGO_DB_HOST', 'db'),
+        "PORT": os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
