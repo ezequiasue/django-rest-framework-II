@@ -27,6 +27,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        # Use the `entrypoint` to modify `pg_hba.conf` before starting PostgreSQL
+        entrypoint: >
+          sh -c "echo 'local all all trust' >> /var/lib/postgresql/data/pg_hba.conf &&
+                 echo 'host all all 127.0.0.1/32 trust' >> /var/lib/postgresql/data/pg_hba.conf &&
+                 docker-entrypoint.sh postgres"
 
     steps:
       - name: Checkout code
@@ -57,7 +62,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    needs: test  # Garante que o trabalho de teste seja concluído antes
+    needs: test
 
     steps:
       - name: Checkout code
@@ -82,7 +87,7 @@ jobs:
 
       - name: Wait for services to be ready
         run: |
-          sleep 30  # Adiciona um atraso para garantir que os serviços estejam prontos
+          sleep 30
 
       - name: Run Migrations
         run: |
