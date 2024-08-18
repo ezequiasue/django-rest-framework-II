@@ -30,7 +30,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: poetry run python manage.py test
+    command: poetry run pytest
     volumes:
       - .:/app
     depends_on:
