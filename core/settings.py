@@ -108,13 +108,14 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get('DJANGO_DB_ENGINE', 'django.db.backends.postgresql'),
-        "NAME": os.environ.get('DJANGO_DB_NAME', 'postgres'),
-        "USER": os.environ.get('DJANGO_DB_USER', 'postgres'),
-        "PASSWORD": os.environ.get('DJANGO_DB_PASSWORD', 'password'),
+        "NAME": os.environ.get('DJANGO_DB_NAME', 'dockercompose'),
+        "USER": os.environ.get('DJANGO_DB_USER', 'esanttos'),
+        "PASSWORD": os.environ.get('DJANGO_DB_PASSWORD', 'Stronger00K'),
         "HOST": os.environ.get('DJANGO_DB_HOST', 'db'),
         "PORT": os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
