@@ -9,3 +9,13 @@
  Explore Github Actions
  
 
+
+Description of the PR:
+
+This PR adds a CI workflow using GitHub Actions to:
+
+Run unit and integration tests using pytest.
+Perform linting checks with flake8.
+Build and push Docker images to DockerHub.
+Ensure that database migrations are applied correctly.
+The CI workflow is triggered on pushes and pull requests to the main branch.

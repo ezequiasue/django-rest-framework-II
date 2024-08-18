@@ -18,9 +18,9 @@ jobs:
       db:
         image: postgres:13.0-alpine
         env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: esanttos
+          POSTGRES_PASSWORD: rootK2020
+          POSTGRES_DB: dockercompose
         ports:
           - 5432:5432
         options: >-
