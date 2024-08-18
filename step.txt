@@ -1,0 +1,11 @@
+ Step bye Step
+1º:
+ git commit "feat: add github actions demo"
+
+ 2º:
+
+ Ir no github sobre o projeto e ver o All Workflows 
+ depois ir em Actions  e ver o jobs
+ Explore Github Actions
+ 
+
