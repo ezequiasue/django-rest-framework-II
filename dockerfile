@@ -25,5 +25,8 @@ RUN poetry install --no-dev
 # Copiar o restante do código do projeto
 COPY . .
 
+# Configurar PYTHONPATH
+ENV PYTHONPATH="/app/.venv/lib/python3.12/site-packages"
+
 # Comando padrão para iniciar o Django
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
