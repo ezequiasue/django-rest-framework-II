@@ -1,5 +1,4 @@
 # CI (Continuous Integration)
-
 name: CI
 
 on:
@@ -58,6 +57,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    needs: test  # Garante que o trabalho de teste seja concluído antes
 
     steps:
       - name: Checkout code
@@ -72,18 +72,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
           docker-compose -f docker-compose.yml build
+
+      - name: Start services
+        run: |
           docker-compose -f docker-compose.yml up -d
+
+      - name: Wait for services to be ready
+        run: |
+          sleep 30  # Adiciona um atraso para garantir que os serviços estejam prontos
 
       - name: Run Migrations
         run: |
-          docker-compose exec web poetry run python manage.py migrate
+          docker-compose exec -T web poetry run python manage.py migrate
 
       - name: Run Tests
         run: |
-          docker-compose exec web poetry run pytest
+          docker-compose exec -T web poetry run pytest
 
       - name: Shutdown services
         run: |
