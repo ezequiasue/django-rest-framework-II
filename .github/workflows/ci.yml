@@ -18,7 +18,7 @@ jobs:
         image: postgres:13.0-alpine
         env:
           POSTGRES_USER: esanttos
-          POSTGRES_PASSWORD: rootK2020
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: dockercompose
         ports:
           - 5432:5432
@@ -27,11 +27,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        # Use the `entrypoint` to modify `pg_hba.conf` before starting PostgreSQL
-        entrypoint: >
-          sh -c "echo 'local all all trust' >> /var/lib/postgresql/data/pg_hba.conf &&
-                 echo 'host all all 127.0.0.1/32 trust' >> /var/lib/postgresql/data/pg_hba.conf &&
-                 docker-entrypoint.sh postgres"
 
     steps:
       - name: Checkout code
@@ -47,6 +42,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry install
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until docker exec $(docker ps -qf "ancestor=postgres:13.0-alpine") pg_isready; do
+            sleep 1
+          done
+
+      - name: Initialize database
+        run: |
+          docker exec $(docker ps -qf "ancestor=postgres:13.0-alpine") /init-db.sh
 
       - name: Run Migrations
         run: |
